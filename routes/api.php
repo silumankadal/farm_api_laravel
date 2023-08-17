@@ -23,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/animals/{id}', [AnimalController::class, 'getanimalbyid']);
 Route::get('/animals', [AnimalController::class, 'index']);
+Route::post('/animals', [AnimalController::class, 'create']);

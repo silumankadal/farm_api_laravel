@@ -46,4 +46,17 @@ class AnimalResource extends JsonResource
             'kandang' => $this->kandang,
         ];
     }
+
+    public function storeanimal(){
+        return [
+            'data' => [
+                'id' => $this->id,
+                'name' => $this->name,
+                'total' => $this->total,
+                'cage_id' => $this->cage_id
+            ],
+            'status' => 200,
+            'message' => 'animal created'  
+        ];
+    }
 }

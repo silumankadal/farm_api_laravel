@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AnimalResource;
 use App\Http\Requests\StoreAnimalRequest;
 use App\Http\Requests\UpdateAnimalRequest;
+use Illuminate\Http\Request;
 use App\Http\Resources\GetAnimal;
 
 class AnimalController extends Controller
@@ -26,7 +27,14 @@ class AnimalController extends Controller
     }
 
     public function getanimalbyid($id){
-        $animal = Animal::with('kandang:id,name')->findOrFail($id);
+        $animal = Animal::with('kandang:id,name')->find($id);
+
+        if(!isset($animal)){
+            return response()->json([
+                "status" => 404,
+                "message" => "data not found"
+            ]);
+        }
         // return new GetAnimal($animal); //ini juga bisa
 
         // return response(new GetAnimal($animal), 200)
@@ -42,9 +50,20 @@ class AnimalController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string',
+            'total' => 'required|digits_between:1,8',
+            'cage_id' => 'required|numeric'
+        ]);
+        $data = [
+            'name' => $request->name,
+            'total' => $request->total,
+            'cage_id' => $request->cage_id
+        ];
+        $animal = Animal::create($data);
+        return (new AnimalResource($animal))->storeanimal();
     }
 
     /**
